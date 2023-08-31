@@ -1,22 +1,22 @@
 {
-  "name": "create-vscode-extension",
+  "name": "create-vscode-ext",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/create-vscode-extension/bin",
+  "sourceRoot": "packages/create-vscode-ext/bin",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/create-vscode-extension",
-        "main": "packages/create-vscode-extension/bin/index.ts",
-        "tsConfig": "packages/create-vscode-extension/tsconfig.lib.json",
-        "assets": ["packages/create-vscode-extension/*.md"],
+        "outputPath": "dist/packages/create-vscode-ext",
+        "main": "packages/create-vscode-ext/bin/index.ts",
+        "tsConfig": "packages/create-vscode-ext/tsconfig.lib.json",
+        "assets": ["packages/create-vscode-ext/*.md"],
         "updateBuildableProjectDepsInPackageJson": false
       }
     },
     "publish": {
-      "command": "node tools/scripts/publish.mjs create-vscode-extension {args.ver} {args.tag}",
+      "command": "node tools/scripts/publish.mjs create-vscode-ext {args.ver} {args.tag}",
       "dependsOn": ["build"]
     },
     "lint": {
@@ -24,8 +24,8 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "packages/create-vscode-extension/**/*.ts",
-          "packages/create-vscode-extension/package.json"
+          "packages/create-vscode-ext/**/*.ts",
+          "packages/create-vscode-ext/package.json"
         ]
       }
     },
@@ -33,7 +33,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "packages/create-vscode-extension/jest.config.ts",
+        "jestConfig": "packages/create-vscode-ext/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {

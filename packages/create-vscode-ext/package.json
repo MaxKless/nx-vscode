@@ -1,5 +1,5 @@
 {
-  "name": "create-vscode-extension",
+  "name": "create-vscode-ext",
   "version": "0.0.1",
   "dependencies": {
     "create-nx-workspace": "16.7.4",
@@ -10,6 +10,6 @@
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
   "bin": {
-    "create-vscode-extension": "./bin/index.js"
+    "create-vscode-ext": "./bin/index.js"
   }
 }

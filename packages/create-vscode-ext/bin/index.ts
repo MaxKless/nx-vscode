@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-
-import { execSync } from 'child_process';
 import { createWorkspace } from 'create-nx-workspace';
 import { prompt } from 'enquirer';
 
@@ -37,7 +35,6 @@ async function main() {
     })
     .parseSync();
 
-  console.log(parsedArgs);
   let name = parsedArgs.name;
   if (!name) {
     name = (
@@ -56,7 +53,7 @@ async function main() {
 
   console.log(`Creating the workspace: ${name}`);
 
-  // This assumes "nx-vscode" and "create-vscode-extension" are at the same version
+  // This assumes "nx-vscode" and "create-vscode-ext" are at the same version
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const presetVersion = require('../package.json').version;
 

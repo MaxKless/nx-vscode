@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 import { join, dirname } from 'path';
 import { mkdirSync, rmSync } from 'fs';
 
-describe('create-vscode-extension', () => {
+describe('create-vscode-ext', () => {
   let projectDirectory: string;
 
   afterAll(() => {
@@ -41,14 +41,11 @@ function createTestProject(extraArgs = '') {
     recursive: true,
   });
 
-  execSync(
-    `npx --yes create-vscode-extension@e2e ${projectName} ${extraArgs}`,
-    {
-      cwd: dirname(projectDirectory),
-      stdio: 'inherit',
-      env: process.env,
-    }
-  );
+  execSync(`npx --yes create-vscode-ext@e2e ${projectName} ${extraArgs}`, {
+    cwd: dirname(projectDirectory),
+    stdio: 'inherit',
+    env: process.env,
+  });
   console.log(`Created test project in "${projectDirectory}"`);
 
   return projectDirectory;
