@@ -2,7 +2,9 @@
   "name": "create-vscode-extension",
   "version": "0.0.1",
   "dependencies": {
-    "create-nx-workspace": "16.7.4"
+    "create-nx-workspace": "16.7.4",
+    "yargs": "^17.7.2",
+    "enquirer": "^2.4.1"
   },
   "type": "commonjs",
   "main": "./src/index.js",

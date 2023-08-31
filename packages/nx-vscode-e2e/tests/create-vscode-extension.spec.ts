@@ -28,7 +28,7 @@ describe('create-vscode-extension', () => {
  * Creates a test project with create-nx-workspace and installs the plugin
  * @returns The directory where the test project was created
  */
-function createTestProject(extraArgs: string = '') {
+function createTestProject(extraArgs = '') {
   const projectName = 'test-project';
   const projectDirectory = join(process.cwd(), 'tmp', projectName);
 
