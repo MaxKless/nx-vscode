@@ -35,6 +35,7 @@ export async function presetGenerator(
     bundle: true,
     generatePackageJson: false,
   };
+  delete generatedProjectConfig.targets.serve;
   updateProjectConfiguration(tree, options.name, generatedProjectConfig);
 
   // UPDATE FILES

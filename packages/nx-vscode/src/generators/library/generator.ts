@@ -12,21 +12,31 @@ import { getNpmScope } from '@nx/js/src/utils/package-json/get-npm-scope';
 import * as path from 'path';
 import { LibraryGeneratorSchema } from './schema';
 import { tsquery } from '@phenomnomnominal/tsquery';
-import { addTsConfigPath } from '@nx/js';
+import { libraryGenerator as jsLibraryGenerator } from '@nx/js';
+import { Linter } from '@nx/linter';
 
 export async function libraryGenerator(
   tree: Tree,
   options: LibraryGeneratorSchema
 ) {
   // CREATE PROJECT
-  const projectRoot = options.directory
-    ? joinPathFragments(options.directory, options.name)
+  const projectRoot = options.directory ?? options.name;
+
+  const npmScope = getNpmScope(tree);
+  const importPath = npmScope
+    ? `${npmScope === '@' ? '' : '@'}${npmScope}/${options.name}`
     : options.name;
-  addProjectConfiguration(tree, options.name, {
-    root: projectRoot,
-    projectType: 'library',
-    sourceRoot: `${projectRoot}/src`,
-    targets: {},
+
+  jsLibraryGenerator(tree, {
+    name: options.name,
+    buildable: false,
+    directory: options.directory,
+    js: false,
+    linter: Linter.EsLint,
+    unitTestRunner: 'none',
+    minimal: true,
+    projectNameAndRootFormat: 'as-provided',
+    skipFormat: true,
   });
 
   const activateFunctionname = `activate${classify(options.name)}`;
@@ -34,16 +44,6 @@ export async function libraryGenerator(
     ...options,
     registerFunctionName: activateFunctionname,
   });
-
-  const npmScope = getNpmScope(tree);
-  const importPath = npmScope
-    ? `${npmScope === '@' ? '' : '@'}${npmScope}/${options.name}`
-    : options.name;
-
-  console.log(importPath);
-  addTsConfigPath(tree, importPath, [
-    joinPathFragments(projectRoot, 'src', 'index.ts'),
-  ]);
 
   // UPDATE ACTIVATE
   if (options.extensionProject) {
