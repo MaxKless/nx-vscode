@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "Library",
+  "title": "",
+  "type": "object",
+
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the library",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name should the library have?"
+    },
+    "extensionProject": {
+      "type": "string",
+      "description": "The extension project the library should be registered in. Will add a call to activate()",
+      "x-priority": "important",
+      "x-dropdown": "projects"
+    },
+    "directory": {
+      "type": "string",
+      "description": "A directory where the library is placed.",
+      "x-priority": "important",
+      "alias": "dir"
+    }
+  },
+  "required": ["name"]
+}
