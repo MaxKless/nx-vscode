@@ -30,6 +30,7 @@ export async function libraryGenerator(
   jsLibraryGenerator(tree, {
     name: options.name,
     buildable: false,
+    bundler: 'none',
     directory: options.directory,
     js: false,
     linter: Linter.EsLint,

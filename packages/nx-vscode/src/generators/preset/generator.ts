@@ -34,6 +34,7 @@ export async function presetGenerator(
     external: ['vscode'],
     bundle: true,
     generatePackageJson: false,
+    sourcemap: true,
   };
   delete generatedProjectConfig.targets.serve;
   updateProjectConfiguration(tree, options.name, generatedProjectConfig);
