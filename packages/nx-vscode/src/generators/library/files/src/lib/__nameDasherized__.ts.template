@@ -1,0 +1,5 @@
+import { ExtensionContext } from 'vscode';
+
+export function <%= activateFunctionName %>(context: ExtensionContext) {
+    // do extension things
+}

@@ -2,23 +2,34 @@ import {
   addProjectConfiguration,
   formatFiles,
   generateFiles,
+  GeneratorCallback,
   getProjects,
   joinPathFragments,
+  runTasksInSerial,
   Tree,
 } from '@nx/devkit';
-import { camelize, classify } from '@nx/devkit/src/utils/string-utils';
+import {
+  camelize,
+  classify,
+  dasherize,
+} from '@nx/devkit/src/utils/string-utils';
 import { getNpmScope } from '@nx/js/src/utils/package-json/get-npm-scope';
 
 import * as path from 'path';
 import { LibraryGeneratorSchema } from './schema';
 import { tsquery } from '@phenomnomnominal/tsquery';
-import { libraryGenerator as jsLibraryGenerator } from '@nx/js';
+import {
+  addTsConfigPath,
+  libraryGenerator as jsLibraryGenerator,
+} from '@nx/js';
 import { Linter } from '@nx/linter';
 
 export async function libraryGenerator(
   tree: Tree,
   options: LibraryGeneratorSchema
 ) {
+  const tasks: GeneratorCallback[] = [];
+
   // CREATE PROJECT
   const projectRoot = options.directory ?? options.name;
 
@@ -27,24 +38,34 @@ export async function libraryGenerator(
     ? `${npmScope === '@' ? '' : '@'}${npmScope}/${options.name}`
     : options.name;
 
-  jsLibraryGenerator(tree, {
-    name: options.name,
-    buildable: false,
-    bundler: 'none',
-    directory: options.directory,
-    js: false,
-    linter: Linter.EsLint,
-    unitTestRunner: 'none',
-    minimal: true,
-    projectNameAndRootFormat: 'as-provided',
-    skipFormat: true,
-  });
+  tasks.push(
+    await jsLibraryGenerator(tree, {
+      name: options.name,
+      buildable: false,
+      bundler: 'none',
+      directory: options.directory,
+      js: false,
+      linter: Linter.EsLint,
+      unitTestRunner: 'none',
+      minimal: true,
+      projectNameAndRootFormat: 'as-provided',
+      skipFormat: true,
+      importPath: importPath,
+    })
+  );
 
-  const activateFunctionname = `activate${classify(options.name)}`;
+  const activateFunctionName = `activate${classify(options.name)}`;
+  const nameDasherized = dasherize(options.name);
   generateFiles(tree, path.join(__dirname, 'files'), projectRoot, {
     ...options,
-    registerFunctionName: activateFunctionname,
+    activateFunctionName,
+    nameDasherized,
   });
+
+  // // lib generator doesn't do it for me??
+  // addTsConfigPath(tree, importPath, [
+  //   joinPathFragments(projectRoot, 'src', 'index.ts'),
+  // ]);
 
   // UPDATE ACTIVATE
   if (options.extensionProject) {
@@ -58,12 +79,12 @@ export async function libraryGenerator(
       (node) => {
         return node
           .getText()
-          .replace('}', `${activateFunctionname}(context) }`);
+          .replace('}', `${activateFunctionName}(context) }`);
       }
     );
 
     newContents =
-      `import { ${activateFunctionname} } from '${importPath}' \n` +
+      `import { ${activateFunctionName} } from '${importPath}' \n` +
       newContents;
 
     if (newContents !== mainFileContents) {
@@ -72,6 +93,7 @@ export async function libraryGenerator(
   }
 
   await formatFiles(tree);
+  return runTasksInSerial(...tasks);
 }
 
 export default libraryGenerator;

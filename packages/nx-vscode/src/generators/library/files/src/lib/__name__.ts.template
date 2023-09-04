@@ -1,5 +1,0 @@
-import { ExtensionContext } from 'vscode';
-
-export function <%= registerFunctionName %>(context: ExtensionContext) {
-
-}

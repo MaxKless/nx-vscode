@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "Treeview",
+  "title": "",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use?"
+    },
+    "project": {
+      "type": "string",
+      "description": "The project the tree view should be registered in.",
+      "x-priority": "important",
+      "x-dropdown": "projects"
+    },
+    "viewContainer": {
+      "type": "string",
+      "description": "The view container the tree view should be shown in. Will create one if it doesn't exist.",
+      "x-priority": "important"
+    }
+  },
+  "required": ["name", "project"]
+}

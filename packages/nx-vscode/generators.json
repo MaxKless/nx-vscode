@@ -12,6 +12,11 @@
       "description": "library generator",
       "aliases": ["lib"],
       "x-type": "library"
+    },
+    "treeview": {
+      "factory": "./src/generators/treeview/generator",
+      "schema": "./src/generators/treeview/schema.json",
+      "description": "treeview generator"
     }
   }
 }

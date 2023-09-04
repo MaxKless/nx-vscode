@@ -1,0 +1,19 @@
+import {
+  ProviderResult,
+  TreeDataProvider,
+  TreeItem,
+  TreeItemCollapsibleState,
+} from 'vscode';
+
+export class <%= treeviewProvider %> implements TreeDataProvider<TreeItem> {
+  getTreeItem(element: TreeItem): TreeItem | Thenable<TreeItem> {
+    return element;
+  }
+
+  getChildren(element?: TreeItem): ProviderResult<TreeItem[]> {
+    if (!element) {
+      return [new TreeItem('Hello', TreeItemCollapsibleState.Collapsed)]
+    }
+    return [new TreeItem('World', TreeItemCollapsibleState.None)]
+  }
+}

@@ -2,8 +2,10 @@ import {
   addDependenciesToPackageJson,
   formatFiles,
   generateFiles,
+  GeneratorCallback,
   installPackagesTask,
   readProjectConfiguration,
+  runTasksInSerial,
   Tree,
   updateJson,
   updateProjectConfiguration,
@@ -18,15 +20,18 @@ export async function presetGenerator(
   tree: Tree,
   options: PresetGeneratorSchema
 ) {
+  const tasks: GeneratorCallback[] = [];
   // GENERATE NX STUFF
-  await nodeAppGenerator(tree, {
-    name: options.name,
-    framework: 'none',
-    rootProject: true,
-    bundler: 'esbuild',
-    e2eTestRunner: 'none',
-    unitTestRunner: 'none',
-  });
+  tasks.push(
+    await nodeAppGenerator(tree, {
+      name: options.name,
+      framework: 'none',
+      rootProject: true,
+      bundler: 'esbuild',
+      e2eTestRunner: 'none',
+      unitTestRunner: 'none',
+    })
+  );
 
   const generatedProjectConfig = readProjectConfiguration(tree, options.name);
   generatedProjectConfig.targets.build.options = {
@@ -35,6 +40,13 @@ export async function presetGenerator(
     bundle: true,
     generatePackageJson: false,
     sourcemap: true,
+    assets: [
+      {
+        glob: '**/*',
+        input: 'src/assets',
+        output: '/assets',
+      },
+    ],
   };
   delete generatedProjectConfig.targets.serve;
   updateProjectConfiguration(tree, options.name, generatedProjectConfig);
@@ -56,12 +68,14 @@ export async function presetGenerator(
   );
 
   // UPDATE PACKAGE.JSON
-  addDependenciesToPackageJson(
-    tree,
-    {},
-    {
-      '@types/vscode': vscodeVersion,
-    }
+  tasks.push(
+    addDependenciesToPackageJson(
+      tree,
+      {},
+      {
+        '@types/vscode': vscodeVersion,
+      }
+    )
   );
   updateJson(tree, 'package.json', (packageJson) => {
     return {
@@ -82,9 +96,10 @@ export async function presetGenerator(
     };
   });
   await formatFiles(tree);
-  return () => {
+  tasks.push(() => {
     installPackagesTask(tree);
-  };
+  });
+  return runTasksInSerial(...tasks);
 }
 
 export default presetGenerator;
