@@ -13,7 +13,7 @@
         "--extensionDevelopmentPath=${workspaceFolder}/dist/<%= name %>",
         "--disable-extensions"
       ],
-      "outFiles": ["${workspaceFolder}/dist/<%= name %>"]
+      "outFiles": ["${workspaceFolder}/dist/<%= name %>/**/*"]
     }
   ]
 }

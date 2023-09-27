@@ -48,6 +48,12 @@ export async function presetGenerator(
       },
     ],
   };
+  generatedProjectConfig.targets.build.configurations = {
+    ...generatedProjectConfig.targets.build.configurations,
+    watch: {
+      watch: true,
+    },
+  };
   delete generatedProjectConfig.targets.serve;
   updateProjectConfiguration(tree, options.name, generatedProjectConfig);
 

@@ -79,7 +79,7 @@ export async function libraryGenerator(
       (node) => {
         return node
           .getText()
-          .replace('}', `${activateFunctionName}(context) }`);
+          .replace(/\}([^}]*)$/, `${activateFunctionName}(context) }`);
       }
     );
 

@@ -43,12 +43,12 @@ export async function treeviewGenerator(
     activateFileContents,
     'FunctionDeclaration[name.text=/activate.*/] > Block',
     (node) => {
-      return node
-        .getText()
-        .replace(
-          '}',
-          `window.registerTreeDataProvider('${treeviewNameDasherized}', new ${treeviewProvider}())`
-        );
+      return node.getText().replace(
+        /\}([^}]*)$/,
+        `
+                
+        context.subscriptions.push(window.registerTreeDataProvider('${treeviewNameDasherized}', new ${treeviewProvider}())) };`
+      );
     }
   );
   newContents =
